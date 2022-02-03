@@ -2,13 +2,9 @@
 import sqlite3
 import PySimpleGUI as sg
 
-def open_db(file):
-    with sqlite3.connect(file) as conn:
-        c = conn.cursor()
-
-def add_item():
+def add_item(c, item):
     pass
 
-def del_item():
+def del_item(c, item):
     pass
 
