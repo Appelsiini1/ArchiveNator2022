@@ -4,6 +4,7 @@ import os
 import sys
 import PySimpleGUI as sg
 from constants import VERSION, ENVPATH
+import db_func
 
 
 def load_configs():
@@ -62,15 +63,15 @@ def main():
         [sg.Text(" " * 15)],
         [
             sg.Text(" " * 6),
-            sg.Button(
-                "Avaa tietokanta", font=("Verdana", 12), size=(20, 1), key="open"
-            ),
+            sg.FileBrowse(
+                "Avaa tietokanta", font=("Verdana", 12), size=(20, 1), key="open", target="invisible", file_types=(('Tietokannat', '*.db'),)
+            ), sg.Input("", key="invisible", visible=False, enable_events=True)
         ],
         [
             sg.Text(" " * 6),
-            sg.Button(
-                "Luo uusi tietokanta", font=("Verdana", 12), size=(20, 1), key="new"
-            ),
+            sg.FileSaveAs(
+                "Luo uusi tietokanta", font=("Verdana", 12), size=(20, 1), key="new", target="invisible2", file_types=(('Tietokannat', '*.db'),)
+            ), sg.Input("", key="invisible2", visible=False, enable_events=True)
         ],
         [sg.Text(" " * 6), sg.Button("Asetukset", font=("Verdana", 12), size=(20, 1))],
         [sg.Text(" " * 6), sg.Button("Poistu", font=("Verdana", 12), size=(20, 1))],
@@ -79,12 +80,21 @@ def main():
     main_window = sg.Window("Päävalikko", layout)
 
     while True:
-        event, _ = main_window.read()
+        event, values = main_window.read()
 
-        if event == "open":
-            sg.PopupOK("Avaa tietokanta", title="Testi")
-        elif event == "new":
-            sg.PopupOK("Luo uusi tietokanta", title="Testi")
+        if event == "invisible":
+            print("FileSelect")
+            file = values["invisible"]
+            if file == "":
+                continue
+            db_func.open_db(file)
+        elif event == "invisible2":
+            file = values["invisible2"]
+            if file == "":
+                continue
+            elif file.split("/")[-1].split(".")[-1] != "db":
+                file += ".db"
+            print(file)
         elif event == "Asetukset":
             sg.PopupOK("Asetukset", title="Testi")
         elif event in (None, "Poistu"):
