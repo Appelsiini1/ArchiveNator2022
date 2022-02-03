@@ -4,7 +4,7 @@ import os
 import sys
 import PySimpleGUI as sg
 from constants import VERSION, ENVPATH
-import db_func
+import archive_window
 
 
 def load_configs():
@@ -83,22 +83,24 @@ def main():
         event, values = main_window.read()
 
         if event == "invisible":
-            print("FileSelect")
             file = values["invisible"]
             if file == "":
                 continue
-            db_func.open_db(file)
+            main_window.Hide()
+            archive_window.arc_window(file)
+            main_window.UnHide()
         elif event == "invisible2":
             file = values["invisible2"]
             if file == "":
                 continue
             elif file.split("/")[-1].split(".")[-1] != "db":
                 file += ".db"
-            print(file)
+            main_window.Hide()
+            archive_window.arc_window(file)
+            main_window.UnHide()
         elif event == "Asetukset":
             sg.PopupOK("Asetukset", title="Testi")
         elif event in (None, "Poistu"):
-            sg.PopupOK("Lopetus", title="Testi")
             break
 
     main_window.close()
