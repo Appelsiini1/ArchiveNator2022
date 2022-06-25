@@ -63,31 +63,52 @@ def create_new(file):
 def arc_window(file):
     """Create archive control window"""
 
-    layout = [
-        [sg.Menu(MENU_DEF)],
-        [
-            sg.Text(
-                "",
-                key="db_name",
-                font=("Verdana", 12, "bold"),
-                size=(22, 1),
-                justification="left",
-                text_color="Red",
-            )
-        ],
-        [sg.Text(" " * 15)],
-        [sg.Button("Takaisin", font=("Verdana", 12), size=(12, 1), key="Poistu")],
-    ]
+    db_desc_visible = False
     with sqlite3.connect(file) as conn:
         c = conn.cursor()
         c.execute("SELECT db_name FROM DB_info")
         db_name = c.fetchone()[0]
 
+        c.execute("SELECT db_desc FROM DB_info")
+        db_desc = c.fetchone()[0]
+        if db_desc == "":
+            db_desc = "(Tyhjä)"
+        desc_newlines = db_desc.count("\n")
+        print(desc_newlines)
+
+        layout = [
+            [sg.Menu(MENU_DEF)],
+            [
+                sg.Text(
+                    db_name,
+                    key="db_name",
+                    font=("Verdana", 12, "bold"),
+                    size=(22, 1),
+                    justification="left",
+                    text_color="Red",
+                )
+            ],
+            [sg.Button("Näytä tietokannan kuvaus", font=("Verdana", 12), size=(25, 1), key="desc_button")],
+            [sg.Text(db_desc, font=("Verdana", 10), size=(45, desc_newlines+1), justification="left", text_color="Black", expand_y=True, visible=False, key="db_desc_text")],
+            [sg.Text(" " * 40, size=(50, 1))],
+            [sg.Button("Takaisin", font=("Verdana", 12), size=(12, 1), key="Poistu")],
+        ]
+
+
         window = sg.Window("Tietokannan hallinta", layout, finalize=True)
         while True:
-            window["db_name"].update(db_name)
             event, values = window.read()
 
             if event in (None, "Poistu"):
                 break
+            if event == "desc_button":
+
+                if db_desc_visible is False:
+                    window["desc_button"].update("Piilota tietokannan kuvaus")
+                    window["db_desc_text"].update(visible=True)
+                    db_desc_visible = True
+                else:
+                    window["desc_button"].update("Näytä tietokannan kuvaus")
+                    window["db_desc_text"].update(visible=False)
+                    db_desc_visible = False
         window.close()
