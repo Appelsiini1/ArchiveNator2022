@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 import PySimpleGUI as sg
-from constants import VERSION, ENVPATH
+from constants import VERSION, ENVPATH, MENU_DEF
 import archive_window
 
 
@@ -33,23 +33,15 @@ def init():
         datefmt="%d/%m/%Y %H:%M:%S",
     )
 
-    logging.info( # pylint: disable=logging-fstring-interpolation
+    logging.info(  # pylint: disable=logging-fstring-interpolation
         f"ArchiveNator2022 v{VERSION}"
     )
 
-
-def main():
-    """Main event loop and startup"""
-    init()
-    settings = load_configs()
-
-    sg.theme(settings["theme"])
-    sg.theme_button_color(color="Red")
-
-    menu_def = [["Tiedosto", ["Poistu"]], ["Tietoa", ["Tietoa", "Lisenssit"]]]
+def define_main_window():
+    '''Define main window'''
 
     layout = [
-        [sg.Menu(menu_def)],
+        [sg.Menu(MENU_DEF)],
         [sg.Text(" " * 15)],
         [
             sg.Text(
@@ -64,18 +56,42 @@ def main():
         [
             sg.Text(" " * 6),
             sg.FileBrowse(
-                "Avaa tietokanta", font=("Verdana", 12), size=(20, 1), key="open", target="invisible", file_types=(('Tietokannat', '*.db'),)
-            ), sg.Input("", key="invisible", visible=False, enable_events=True)
+                "Avaa tietokanta",
+                font=("Verdana", 12),
+                size=(20, 1),
+                key="open",
+                target="invisible",
+                file_types=(("Tietokannat", "*.db"),),
+            ),
+            sg.Input("", key="invisible", visible=False, enable_events=True),
         ],
         [
             sg.Text(" " * 6),
             sg.FileSaveAs(
-                "Luo uusi tietokanta", font=("Verdana", 12), size=(20, 1), key="new", target="invisible2", file_types=(('Tietokannat', '*.db'),)
-            ), sg.Input("", key="invisible2", visible=False, enable_events=True)
+                "Luo uusi tietokanta",
+                font=("Verdana", 12),
+                size=(20, 1),
+                key="new",
+                target="invisible2",
+                file_types=(("Tietokannat", "*.db"),),
+            ),
+            sg.Input("", key="invisible2", visible=False, enable_events=True),
         ],
         [sg.Text(" " * 6), sg.Button("Asetukset", font=("Verdana", 12), size=(20, 1))],
         [sg.Text(" " * 6), sg.Button("Poistu", font=("Verdana", 12), size=(20, 1))],
     ]
+
+    return layout
+
+def main():
+    """Main event loop and startup"""
+    init()
+    settings = load_configs()
+
+    sg.theme(settings["theme"])
+    sg.theme_button_color(color="Red")
+
+    layout = define_main_window()
 
     main_window = sg.Window("Päävalikko", layout)
 
@@ -96,7 +112,7 @@ def main():
             elif file.split("/")[-1].split(".")[-1] != "db":
                 file += ".db"
             main_window.Hide()
-            archive_window.arc_window(file)
+            archive_window.create_new(file)
             main_window.UnHide()
         elif event == "Asetukset":
             sg.PopupOK("Asetukset", title="Testi")
