@@ -74,7 +74,15 @@ def arc_window(file):
         if db_desc == "":
             db_desc = "(Tyhjä)"
         desc_newlines = db_desc.count("\n")
-        print(desc_newlines)
+        
+        c.execute("SELECT db_table_count, db_tables FROM DB_info")
+        db_tables_raw = c.fetchall()[0]
+        db_table_count = db_tables_raw[0]
+        db_tables = [db_tables_raw[1]]
+        if db_table_count == 0:
+            db_tables = ["(Uusi taulu)"]
+        else:
+            db_tables = ["(Uusi taulu)"] + db_tables[0].split(";")
 
         layout = [
             [sg.Menu(MENU_DEF)],
@@ -88,12 +96,31 @@ def arc_window(file):
                     text_color="Red",
                 )
             ],
-            [sg.Button("Näytä tietokannan kuvaus", font=("Verdana", 12), size=(25, 1), key="desc_button")],
-            [sg.Text(db_desc, font=("Verdana", 10), size=(45, desc_newlines+1), justification="left", text_color="Black", expand_y=True, visible=False, key="db_desc_text")],
+            [
+                sg.Button(
+                    "Näytä tietokannan kuvaus",
+                    font=("Verdana", 12),
+                    size=(25, 1),
+                    key="desc_button",
+                )
+            ],
+            [
+                sg.Text(
+                    db_desc,
+                    font=("Verdana", 10),
+                    #size=(45, desc_newlines + 1),
+                    justification="left",
+                    text_color="Black",
+                    expand_y=True,
+                    visible=False,
+                    key="db_desc_text",
+                    auto_size_text=True
+                )
+            ],
             [sg.Text(" " * 40, size=(50, 1))],
+            [sg.DropDown(db_tables, default_value="(Uusi taulu)", size=(25, 2), key="dropdown" ), sg.Button(">>>", font=("Verdana", 12), size=(5,1), key="dropdown_select")],
             [sg.Button("Takaisin", font=("Verdana", 12), size=(12, 1), key="Poistu")],
         ]
-
 
         window = sg.Window("Tietokannan hallinta", layout, finalize=True)
         while True:
@@ -111,4 +138,7 @@ def arc_window(file):
                     window["desc_button"].update("Näytä tietokannan kuvaus")
                     window["db_desc_text"].update(visible=False)
                     db_desc_visible = False
+            if event == "dropdown_select":
+                sg.PopupOK("TESTI")
+                print(values["dropdown"])
         window.close()
