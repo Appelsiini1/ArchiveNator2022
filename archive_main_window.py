@@ -2,39 +2,13 @@
 import sqlite3
 import string
 import PySimpleGUI as sg
-from constants import MENU_DEF
-from db_func import get_db_info
+from archive_windows_layouts import new_file_layout, archive_main_window
 
 
-def create_new(file:string):
+def create_new(file: string):
     """Create new database config window"""
-    layout = [
-        [sg.Menu(MENU_DEF)],
-        [
-            sg.Text(
-                "Tietokannan nimi:",
-                font=("Verdana", 12, "bold"),
-                size=(20, 1),
-                justification="left",
-                text_color="Red",
-            )
-        ],
-        [sg.InputText("", key="name")],
-        [
-            sg.Text(
-                "Kuvaus:",
-                font=("Verdana", 12),
-                size=(20, 1),
-                justification="left",
-                text_color="Red",
-            )
-        ],
-        [sg.Multiline(key="description", size=(50, 5))],
-        [
-            sg.Button("OK", font=("Verdana", 12), size=(12, 1), key="ok"),
-            sg.Button("Peruuta", font=("Verdana", 12), size=(12, 1), key="peruuta"),
-        ],
-    ]
+
+    layout = new_file_layout()
 
     window = sg.Window("Uusi tietokanta", layout)
     while True:
@@ -62,65 +36,12 @@ def create_new(file:string):
             break
 
 
-def arc_window(file:string):
+def arc_window(file: string):
     """Create archive control window"""
 
     db_desc_visible = False
-    db_name, db_desc, db_tables = get_db_info(file)
 
-    layout = [
-        [sg.Menu(MENU_DEF)],
-        [
-            sg.Text(
-                db_name,
-                key="db_name",
-                font=("Verdana", 12, "bold"),
-                size=(22, 1),
-                justification="left",
-                text_color="Red",
-            )
-        ],
-        [
-            sg.Button(
-                "Näytä tietokannan kuvaus",
-                font=("Verdana", 12),
-                size=(25, 1),
-                key="desc_button",
-            ),
-            sg.Button(
-                "Muuta tietoja",
-                font=("Verdana", 12),
-                size=(25, 1),
-                key="change_info_button",
-            ),
-        ],
-        [
-            sg.Text(
-                db_desc,
-                font=("Verdana", 10),
-                # size=(45, desc_newlines + 1),
-                justification="left",
-                text_color="Black",
-                expand_y=True,
-                visible=False,
-                key="db_desc_text",
-                auto_size_text=True,
-            )
-        ],
-        [sg.Text(" " * 40, size=(50, 1))],
-        [
-            sg.DropDown(
-                db_tables,
-                default_value="(Uusi taulu)",
-                size=(25, 2),
-                key="dropdown",
-            ),
-            sg.Button(
-                ">>>", font=("Verdana", 12), size=(5, 1), key="dropdown_select"
-            ),
-        ],
-        [sg.Button("Takaisin", font=("Verdana", 12), size=(12, 1), key="Poistu")],
-    ]
+    layout = archive_main_window(file)
 
     window = sg.Window("Tietokannan hallinta", layout, finalize=True)
     while True:
