@@ -36,6 +36,11 @@ def create_new(file: string):
             break
 
 
+def update_db_window(file: string):
+    """Creates a window to update database info"""
+    pass
+
+
 def arc_window(file: string):
     """Create archive control window"""
 

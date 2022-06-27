@@ -1,8 +1,9 @@
-'''Database functions'''
+"""Database functions"""
 import sqlite3
 import string
 
-def get_db_info(file:string):
+
+def get_db_info(file: string):
     """Returns a list with the database information"""
     with sqlite3.connect(file) as conn:
         c = conn.cursor()
@@ -13,7 +14,6 @@ def get_db_info(file:string):
         db_desc = c.fetchone()[0]
         if db_desc == "":
             db_desc = "(Tyhjä)"
-        # desc_newlines = db_desc.count("\n")
 
         c.execute("SELECT db_table_count, db_tables FROM DB_info")
         db_tables_raw = c.fetchall()[0]
@@ -24,3 +24,15 @@ def get_db_info(file:string):
         else:
             db_tables = ["(Uusi taulu)"] + db_tables[0].split(";")
     return [db_name, db_desc, db_tables]
+
+
+def update_db_info(file: string, new_name=None, new_desc=None):
+    """Updates database entry for name and/or description of the database"""
+
+    with sqlite3.connect(file) as conn:
+        c = conn.cursor()
+
+        if new_name is not None:
+            c.execute(f"UPDATE DB_info SET db_name={new_name}")
+        if new_desc is not None:
+            c.execute(f"UPDATE DB_info SET db_desc={new_desc}")
