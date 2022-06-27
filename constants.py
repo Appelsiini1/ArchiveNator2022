@@ -1,7 +1,7 @@
 '''Constants used in the program'''
-import os
+from os import getenv
 
-ENVPATH = (os.getenv("APPDATA") + "\\ArchiveNator2022")
+ENVPATH = (getenv("APPDATA") + "\\ArchiveNator2022")
 
 MENU_DEF = [["Tiedosto", ["Poistu"]], ["Tietoa", ["Tietoa", "Lisenssit"]]]
 
