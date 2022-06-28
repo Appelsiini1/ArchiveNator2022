@@ -1,7 +1,8 @@
+"""Functions for programn initialization"""
 import logging
+from os import path, mkdir
 from PySimpleGUI import UserSettings
 from constants import ENVPATH, VERSION
-from os import path, mkdir
 
 def load_configs():
     """Load program configurations"""
