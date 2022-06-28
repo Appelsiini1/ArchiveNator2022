@@ -95,3 +95,37 @@ def archive_main_window(file: string):
     ]
 
     return layout
+
+
+def info_update_window(db_name: string, db_desc: string):
+    """Window for changing database information"""
+
+    layout = [
+        [sg.Menu(MENU_DEF)],
+        [
+            sg.Text(
+                "Tietokannan nimi:",
+                font=("Verdana", 12, "bold"),
+                size=(20, 1),
+                justification="left",
+                text_color="Red",
+            )
+        ],
+        [sg.InputText(db_name, key="name")],
+        [
+            sg.Text(
+                "Kuvaus:",
+                font=("Verdana", 12),
+                size=(20, 1),
+                justification="left",
+                text_color="Red",
+            )
+        ],
+        [sg.Multiline(db_desc, key="description", size=(50, 5))],
+        [
+            sg.Button("OK", font=("Verdana", 12), size=(12, 1), key="ok"),
+            sg.Button("Peruuta", font=("Verdana", 12), size=(12, 1), key="peruuta"),
+        ],
+    ]
+
+    return layout

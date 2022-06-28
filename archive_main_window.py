@@ -2,7 +2,8 @@
 import sqlite3
 import string
 import PySimpleGUI as sg
-from archive_windows_layouts import new_file_layout, archive_main_window
+from archive_windows_layouts import new_file_layout, archive_main_window, info_update_window
+from db_func import get_db_info, update_db_info
 
 
 def create_new(file: string):
@@ -38,7 +39,24 @@ def create_new(file: string):
 
 def update_db_window(file: string):
     """Creates a window to update database info"""
-    pass
+
+    db_name, db_desc, _ = get_db_info(file)
+
+    layout = info_update_window(db_name, db_desc)
+    window = sg.Window("Tietokannan hallinta", layout, finalize=True)
+
+    while True:
+        event, values = window.read()
+        if event in (None, "peruuta"):
+            break
+        if event == "ok":
+            if values["name"] is not db_name:
+                update_db_info(file, new_name=values["name"])
+            if values["description"] is not db_desc:
+                update_db_info(file, new_desc=values["description"])
+            break
+    window.close()
+    return [values["name"],values["description"]]
 
 
 def arc_window(file: string):
@@ -67,4 +85,10 @@ def arc_window(file: string):
         if event == "dropdown_select":
             sg.PopupOK("TESTI")
             print(values["dropdown"])
+        if event == "change_info_button":
+            window.Hide()
+            new_name, new_desc = update_db_window(file)
+            window["db_name"].update(f"Tietokanta: {new_name}")
+            window["db_desc_text"].update(new_desc)
+            window.UnHide()
     window.close()
