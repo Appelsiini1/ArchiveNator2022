@@ -33,6 +33,6 @@ def update_db_info(file: string, new_name=None, new_desc=None):
         c = conn.cursor()
 
         if new_name is not None:
-            c.execute(f"UPDATE DB_info SET db_name={new_name}")
+            c.execute(f'UPDATE DB_info SET db_name="{new_name}"')
         if new_desc is not None:
-            c.execute(f"UPDATE DB_info SET db_desc={new_desc}")
+            c.execute(f'UPDATE DB_info SET db_desc="{new_desc}"')
