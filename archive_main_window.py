@@ -58,6 +58,13 @@ def update_db_window(file: string):
     window.close()
     return [values["name"],values["description"]]
 
+def arc_dropdown_menu(value:string):
+    """Select a database table to view"""
+    if value == "(Uusi taulu)":
+        table_name=sg.popup_get_text("Anna uuden taulun nimi:")
+        if table_name is None:
+            return
+
 
 def arc_window(file: string):
     """Create archive control window"""
@@ -83,8 +90,9 @@ def arc_window(file: string):
                 window["db_desc_text"].update(visible=False)
                 db_desc_visible = False
         if event == "dropdown_select":
-            sg.PopupOK("TESTI")
-            print(values["dropdown"])
+            window.Hide()
+            arc_dropdown_menu(values["dropdown"])            
+            window.UnHide()
         if event == "change_info_button":
             window.Hide()
             new_name, new_desc = update_db_window(file)
