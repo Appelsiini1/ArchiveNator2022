@@ -1,5 +1,4 @@
 """Functions to create layouts for archive management windows"""
-import string
 import PySimpleGUI as sg
 from constants import MENU_DEF
 from db_func import get_db_info
@@ -38,7 +37,7 @@ def new_file_layout():
     return layout
 
 
-def archive_main_window(file: string):
+def archive_main_window(file: str):
     """Define layout for main window of archive management"""
     db_name, db_desc, db_tables = get_db_info(file)
 
@@ -90,6 +89,8 @@ def archive_main_window(file: string):
                 key="dropdown",
             ),
             sg.Button(">>>", font=("Verdana", 12), size=(5, 1), key="dropdown_select"),
+            sg.Button("XXX", font=("Verdana", 12), size=(5, 1), key="dropdown_delete"),
+            sg.Button("Muuta", font=("Verdana", 12), size=(5, 1), key="dropdown_change")
         ],
         [sg.Button("Takaisin", font=("Verdana", 12), size=(12, 1), key="Poistu")],
     ]
@@ -97,7 +98,7 @@ def archive_main_window(file: string):
     return layout
 
 
-def info_update_window(db_name: string, db_desc: string):
+def info_update_window(db_name: str, db_desc: str):
     """Window for changing database information"""
 
     layout = [
