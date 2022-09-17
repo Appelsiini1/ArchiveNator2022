@@ -5,4 +5,4 @@ ENVPATH = (getenv("APPDATA") + "\\ArchiveNator2022")
 
 MENU_DEF = [["Tiedosto", ["Poistu"]], ["Tietoa", ["Tietoa", "Lisenssit"]]]
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"

@@ -100,7 +100,6 @@ def arc_window(file: str):
             window.Hide()
             arc_dropdown_menu(values["dropdown"], file)
             _, _, db_tables = get_db_info(file)
-            print(db_tables)
             window["dropdown"].update(value=db_tables[0], values=db_tables)
             window.UnHide()
 

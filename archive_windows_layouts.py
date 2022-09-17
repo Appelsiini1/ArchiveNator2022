@@ -88,8 +88,8 @@ def archive_main_window(file: str):
                 size=(25, 2),
                 key="dropdown",
             ),
-            sg.Button(">>>", font=("Verdana", 12), size=(5, 1), key="dropdown_select"),
-            sg.Button("XXX", font=("Verdana", 12), size=(5, 1), key="dropdown_delete"),
+            sg.Button("Valitse", font=("Verdana", 12), size=(5, 1), key="dropdown_select"),
+            sg.Button("Poista", font=("Verdana", 12), size=(5, 1), key="dropdown_delete"),
             sg.Button("Muuta", font=("Verdana", 12), size=(5, 1), key="dropdown_change")
         ],
         [sg.Button("Takaisin", font=("Verdana", 12), size=(12, 1), key="Poistu")],
