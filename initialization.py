@@ -7,7 +7,7 @@ from constants import ENVPATH, VERSION
 def load_configs():
     """Load program configurations"""
     settings = UserSettings(filename=path.join(ENVPATH, "settings.json"))
-    if bool(settings):
+    if not bool(settings):
         logging.info("No settings found, loading defaults.")
         settings["theme"] = "Reddit"
         settings["ButtonColour"] = "Red"
