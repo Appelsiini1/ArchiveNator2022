@@ -2,9 +2,10 @@
 
 import PySimpleGUI as sg
 import table_control_windows_layouts as tcl
-from db_func import get_doc_titles, get_doc_info
+from db_func import get_doc_titles, get_doc_info, set_doc_info, update_doc_info
 
-def document_window(file:str, doc_ID:int | None, mode:int, table_name:str):
+
+def document_window(file: str, doc_ID: int | None, mode: int, table_name: str):
     """Document information window"""
 
     if mode == 1:
@@ -21,7 +22,6 @@ def document_window(file:str, doc_ID:int | None, mode:int, table_name:str):
         doc_desc = doc_info[3]
         doc_path = doc_info[4]
 
-
     layout = tcl.doc_window_layout()
 
     window = sg.Window(f"{table_name}", layout, finalize=True)
@@ -34,11 +34,33 @@ def document_window(file:str, doc_ID:int | None, mode:int, table_name:str):
     while True:
         event, values = window.read()
 
+        if event in (None, "cancel"):
+            break
+
+        if event == "save":
+            if mode == 1:
+                doc_info_new = [
+                    None,
+                    values["doc_name"],
+                    values["doc_date"],
+                    values["doc_desc"],
+                    values["doc_path"],
+                ]
+                set_doc_info(file, table_name, doc_info_new)
+            if mode == 2:
+                doc_info_update = [
+                    values["doc_ID"],
+                    values["doc_name"],
+                    values["doc_date"],
+                    values["doc_desc"],
+                    values["doc_path"],
+                ]
+                update_doc_info(file, table_name, doc_info_update)
+            break
+    window.close()
 
 
-
-
-def main_table_window(file:str, table_name:str):
+def main_table_window(file: str, table_name: str):
     """Create & handle main table control window"""
     doc_titles = get_doc_titles(file, table_name)
 
@@ -52,7 +74,8 @@ def main_table_window(file:str, table_name:str):
             break
         if event == "new_doc":
             document_window(file, None, 1, table_name)
-        
+
         if event == "show_doc":
             doc_ID_selected = values["listbox"][0].split(" - ")[0]
             document_window(file, doc_ID_selected, 2, table_name)
+    window.close()
