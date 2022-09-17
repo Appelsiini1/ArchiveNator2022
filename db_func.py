@@ -6,6 +6,7 @@ import logging
 
 def get_db_info(file: str):
     """Returns a list with the database information"""
+
     with sqlite3.connect(file) as conn:
         c = conn.cursor()
         c.execute("SELECT db_name FROM DB_info")
@@ -24,7 +25,6 @@ def get_db_info(file: str):
             db_tables = ["(Uusi taulu)"]
         else:
             db_tables = ["(Uusi taulu)"] + db_tables[0].split(";")
-        print(db_tables)
     return [db_name, db_desc, db_tables]
 
 
@@ -43,6 +43,7 @@ def update_db_info(file: str, new_name=None, new_desc=None):
 
 def update_db_tables_info(cursor: any, obj: list, upd_type: int):
     """Update metadata for tables"""
+
     cursor.execute("SELECT db_table_count, db_tables FROM DB_info")
     db_tables_raw = cursor.fetchall()[0]
     try:
@@ -63,7 +64,7 @@ def update_db_tables_info(cursor: any, obj: list, upd_type: int):
     elif upd_type == 1:
         try:
             rm_index = db_tables.index(obj[0])
-            
+
         except ValueError:
             logging.exception("Unable to find table to update in database info.")
             return
@@ -79,6 +80,7 @@ def update_db_tables_info(cursor: any, obj: list, upd_type: int):
 
 def update_db_tables(file: str, tables_to_update: list):
     """ "Updates table metadata and adds or removes tables in the database"""
+
     with sqlite3.connect(file) as conn:
         c = conn.cursor()
         for obj in tables_to_update:
@@ -103,3 +105,33 @@ def update_db_tables(file: str, tables_to_update: list):
                 update_db_tables_info(c, obj, 2)
 
         conn.commit()
+
+
+def get_doc_titles(file: str, table_name: str):
+    """Gets document titles and returns them as a list"""
+
+    with sqlite3.connect(file) as conn:
+        c = conn.cursor()
+
+        c.execute(f"SELECT ID, name FROM {table_name} ORDER BY ID")
+        titles_raw = c.fetchall()
+
+        doc_titles = []
+        for title in titles_raw:
+            title[0] = str(title[0])
+            doc_titles.append(" - ".join(title))
+
+    return doc_titles
+
+
+def get_doc_info(file: str, doc_ID: int, table_name: str):
+    """Get document information from database.
+    Returns a list containing ID, name, date, description, path and other data."""
+
+    with sqlite3.connect(file) as conn:
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM {table_name} WHERE ID={doc_ID}")
+        doc = c.fetchone()
+
+    return doc
