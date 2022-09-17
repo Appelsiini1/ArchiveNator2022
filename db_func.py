@@ -135,3 +135,12 @@ def get_doc_info(file: str, doc_ID: int, table_name: str):
         doc = c.fetchone()
 
     return doc
+
+
+def set_doc_info(file:str, table_name:str, doc_info:list):
+    """Used to save document info to database"""
+    pass
+
+def update_doc_info(file:str, table_name:str, doc_info:list):
+    """Used to update document info to database"""
+    pass
