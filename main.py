@@ -9,7 +9,7 @@ import archive_main_window
 
 
 def define_main_window():
-    '''Define main window'''
+    """Define main window"""
 
     layout = [
         [sg.Menu(MENU_DEF)],
@@ -53,6 +53,7 @@ def define_main_window():
     ]
 
     return layout
+
 
 def main():
     """Main event loop and startup"""
